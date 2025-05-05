@@ -33,23 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
   actualizarEstiloMascota();
 });
 
-function enviarComando(accion) {
-  const tipo = 'comida-' + petSelect.value;
-  fetch('http://TU_API_ENDPOINT/control', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tipo, accion })
-  })
-    .then(res => res.json())
-    .then(data => alert(data.mensaje));
-}
-
 function enviarComandoAgua(accion) {
-  fetch('http://TU_API_ENDPOINT/control', {
+  const url = accion === "abrir" 
+    ? 'http://10.40.0.8:5000/desactivar' 
+    : 'http://10.40.0.8:5000/activar';
+
+  fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ tipo: 'agua', accion })
   })
     .then(res => res.json())
-    .then(data => alert(data.mensaje));
+    .then(data => alert(data.mensaje))
+    .catch(err => console.error('Error:', err));
 }
