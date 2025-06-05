@@ -1,194 +1,214 @@
 
 .btn-comida {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      #ffeb3b 25%,
-      #ff9800 25%,
-      #ff9800 50%,
-      #ffeb3b 50%,
-      #ffeb3b 75%,
-      #ff9800 75%
-    );
-    background-size: 40px 40px;
-    background-position: 0 0;
-    color: white;
-    border-radius: 8px;
-    padding: 15px 30px;
-    border: 2px solid #ff9800;
-    font-weight: bold;
-    transition: transform 0.3s ease;
-    font-size: 1.2rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #ffeb3b 25%,
+    #ff9800 25%,
+    #ff9800 50%,
+    #ffeb3b 50%,
+    #ffeb3b 75%,
+    #ff9800 75%
+  );
+  background-size: 40px 40px;
+  background-position: 0 0;
+  color: white;
+  border-radius: 8px;
+  padding: 15px 30px;
+  border: 2px solid #ff9800;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+  font-size: 1.2rem;
 }
 
 .btn-comida:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .comida-icon {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
+
 .pet-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: inline-block;
-    position: relative;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  position: relative;
 }
 
 .pet-icon.gato i.fas.fa-cat {
-    background: linear-gradient(
-      135deg,
-      #ffeb3b 25%,
-      #ff9800 25%,
-      #ff9800 50%,
-      #ffeb3b 50%,
-      #ffeb3b 75%,
-      #ff9800 75%
-    );
-    -webkit-background-clip: text;
-    color: transparent;
-    background-size: 40px 40px;
-    animation: rayas 1s ease-in-out infinite;
+  background: linear-gradient(
+    135deg,
+    #ffeb3b 25%,
+    #ff9800 25%,
+    #ff9800 50%,
+    #ffeb3b 50%,
+    #ffeb3b 75%,
+    #ff9800 75%
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 40px 40px;
+  animation: rayas 1s ease-in-out infinite;
 }
 
 @keyframes rayas {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 40px 40px;
-    }
+  0% {
+      background-position: 0 0;
+  }
+  100% {
+      background-position: 40px 40px;
+  }
 }
 
 .pet-icon.perro i.fas.fa-dog {
-    color: #8b4513;
+  color: #8b4513;
 }
 
 .perro {
-    font-size: 3rem;
-    color: #8b4513;
+  font-size: 3rem;
+  color: #8b4513;
 }
 
+
 #petSelect {
-    font-size: 1.2rem;
-    padding: 10px;
+  font-size: 1.2rem;
+  padding: 10px;
+  width: 100% !important;
 }
 
 #petSelect:focus {
-    border-color: #ff6347;
-    box-shadow: 0 0 5px rgba(255, 99, 71, 0.5);
+  border-color: #ff6347;
+  box-shadow: 0 0 5px rgba(255, 99, 71, 0.5);
 }
 
+
 #petIcon.perro {
-    animation: perro-anim 1s ease-in-out;
+  animation: perro-anim 1s ease-in-out;
 }
 
 @keyframes perro-anim {
-    0% {
-        transform: rotate(-5deg);
-    }
-    50% {
-        transform: rotate(5deg);
-    }
-    100% {
-        transform: rotate(0deg);
-    }
+  0% {
+      transform: rotate(-5deg);
+  }
+  50% {
+      transform: rotate(5deg);
+  }
+  100% {
+      transform: rotate(0deg);
+  }
 }
 
+
 .btn-agua {
-    position: relative;
-    overflow: hidden;
-    background-color: #3498db;
-    color: white;
-    border-radius: 8px;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border: 2px solid #2980b9;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: #3498db;
+  color: white;
+  border-radius: 8px;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 2px solid #2980b9;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 1;
 }
 
 .btn-agua:hover {
-    background-color: #2980b9;
-    transform: scale(1.05);
+  background-color: #2980b9;
+  transform: scale(1.05);
 }
 
-.btn-agua i {
-    margin-right: 10px;
+.btn-agua::before {
+  content: "";
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 0;
+  transition: bottom 0.5s ease-in-out;
 }
 
-.btn-agua {
-    position: relative;
-    overflow: hidden;
-    background-color: #3498db;
-    color: white;
-    border-radius: 8px;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border: 2px solid #2980b9;
-    cursor: pointer;
-    z-index: 1;
-  }
-  
-  .btn-agua::before {
-    content: "";
-    position: absolute;
-    bottom: -100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    z-index: 0;
-    transition: bottom 0.5s ease-in-out;
-  }
-  
-  .btn-agua:hover::before {
-    bottom: 0;
-  }
-  
-  .btn-agua > * {
-    position: relative;
-    z-index: 1;
-  }
-  
+.btn-agua:hover::before {
+  bottom: 0;
+}
+
+.btn-agua > * {
+  position: relative;
+  z-index: 1;
+}
+
+
 .remote-container {
-    background: linear-gradient(to right, #dbeafe, #e0f7fa);
-    padding: 20px;
-  }
-  
-  .remote-panel {
-    background-color: white;
-    border-radius: 30px;
-    padding: 40px 30px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 2px solid #3498db;
-  }
-  
-  #petSelect {
-    width: 100% !important;
-  }
-  
-  .remote-panel h2 {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  @media (max-width: 576px) {
-    .remote-panel {
-      padding: 30px 20px;
-      border-radius: 20px;
-    }
-  
-    .btn-comida,
-    .btn-agua {
-      font-size: 1rem;
-      padding: 12px 20px;
-    }
-  }
-  
+  background: linear-gradient(to right, #dbeafe, #e0f7fa);
+  padding: 20px;
+}
+
+.remote-panel {
+  background-color: white;
+  border-radius: 30px;
+  padding: 40px 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 2px solid #3498db;
+  position: relative;
+}
+
+
+.alerta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 250px;
+  background: white;
+  border-radius: 15px;
+  padding: 25px 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 9999;
+  user-select: none;
+}
+
+
+.alerta-exito {
+  border: 3px solid #28a745;
+  color: #28a745;
+}
+
+
+.alerta-error {
+  border: 3px solid #dc3545;
+  color: #dc3545;
+}
+
+
+.alerta-info {
+  border: 3px solid #17a2b8;
+  color: #17a2b8;
+}
+
+
+@media (max-width: 576px) {
+.remote-panel {
+  padding: 30px 20px;
+  border-radius: 20px;
+}
+
+.btn-comida,
+.btn-agua {
+  font-size: 1rem;
+  padding: 12px 20px;
+}
+}

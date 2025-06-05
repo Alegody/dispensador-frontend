@@ -14,7 +14,6 @@ function actualizarEstiloMascota() {
       btn.style.backgroundPosition = "0 0";
       btn.style.borderColor = "#ff9800";
     });
-
   } else {
     petIcon.innerHTML = '<i class="fas fa-dog"></i>';
     petIcon.classList.remove('gato');
@@ -28,15 +27,42 @@ function actualizarEstiloMascota() {
 }
 
 petSelect.addEventListener('change', actualizarEstiloMascota);
+document.addEventListener('DOMContentLoaded', actualizarEstiloMascota);
 
-document.addEventListener('DOMContentLoaded', () => {
-  actualizarEstiloMascota();
-});
+
+function mostrarAlerta(tipo, mensaje) {
+  const alerta = document.getElementById('alerta');
+  const icono = document.getElementById('alerta-icono');
+  const mensajeElemento = document.getElementById('alerta-mensaje');
+
+  mensajeElemento.textContent = mensaje;
+
+  alerta.classList.remove('alerta-exito', 'alerta-error', 'alerta-info');
+  if (tipo === 'exito') {
+    alerta.classList.add('alerta-exito');
+    icono.className = 'fas fa-check-circle';
+  } else if (tipo === 'error') {
+    alerta.classList.add('alerta-error');
+    icono.className = 'fas fa-times-circle';
+  } else {
+    alerta.classList.add('alerta-info');
+    icono.className = 'fas fa-spinner fa-spin';
+  }
+
+  alerta.style.display = 'flex';
+}
+
+function ocultarAlerta() {
+  document.getElementById('alerta').style.display = 'none';
+}
+
 
 function enviarComandoAgua(accion) {
   const url = accion === "abrir" 
     ? 'http://10.40.0.8:5000/desactivar' 
     : 'http://10.40.0.8:5000/activar';
+
+  mostrarAlerta('info', 'Enviando comando...');
 
   fetch(url, {
     method: 'POST',
@@ -44,6 +70,13 @@ function enviarComandoAgua(accion) {
     body: JSON.stringify({ tipo: 'agua', accion })
   })
     .then(res => res.json())
-    .then(data => alert(data.mensaje))
-    .catch(err => console.error('Error:', err));
+    .then(data => {
+      mostrarAlerta('exito', data.mensaje);
+      setTimeout(ocultarAlerta, 2500);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      mostrarAlerta('error', 'Error al enviar comando.');
+      setTimeout(ocultarAlerta, 2500);
+    });
 }
