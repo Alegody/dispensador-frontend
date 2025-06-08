@@ -1,49 +1,102 @@
 const petSelect = document.getElementById('petSelect');
 const petIcon = document.getElementById('petIcon');
-const comidaBotones = document.querySelectorAll('.btn-comida');
+const comidaAbrirBtn = document.getElementById('comidaAbrir');
+const comidaCerrarBtn = document.getElementById('comidaCerrar');
+
+// Endpoint base
+const API_BASE = 'https://d6a9-186-158-200-153.ngrok-free.app';
 
 function actualizarEstiloMascota() {
-  if (petSelect.value === 'gato') {
-    petIcon.innerHTML = '<i class="fas fa-cat"></i>';
-    petIcon.classList.remove('perro');
+  const tipo = petSelect.value;
+
+  petIcon.classList.remove('gato', 'perro', 'gallina');
+
+  if (tipo === 'gato') {
+    petIcon.innerHTML = '<i class="fas fa-cat fa-3x"></i>';
     petIcon.classList.add('gato');
-
-    comidaBotones.forEach(btn => {
-      btn.style.background = "linear-gradient(135deg, #ffeb3b 25%, #ff9800 25%, #ff9800 50%, #ffeb3b 50%, #ffeb3b 75%, #ff9800 75%)";
-      btn.style.backgroundSize = "40px 40px";
-      btn.style.backgroundPosition = "0 0";
-      btn.style.borderColor = "#ff9800";
-    });
-
-  } else {
-    petIcon.innerHTML = '<i class="fas fa-dog"></i>';
-    petIcon.classList.remove('gato');
+    comidaAbrirBtn.style.background = "#ffc107";
+    comidaCerrarBtn.style.background = "#ff9800";
+  } else if (tipo === 'perro') {
+    petIcon.innerHTML = '<i class="fas fa-dog fa-3x"></i>';
     petIcon.classList.add('perro');
-
-    comidaBotones.forEach(btn => {
-      btn.style.background = "#8b4513";
-      btn.style.borderColor = "#8b4513";
-    });
+    comidaAbrirBtn.style.background = "#8b4513";
+    comidaCerrarBtn.style.background = "#a0522d";
+  } else if (tipo === 'gallina') {
+    petIcon.innerHTML = '<i class="fas fa-dove fa-3x"></i>'; // dove como gallina
+    petIcon.classList.add('gallina');
+    comidaAbrirBtn.style.background = "#e0b800";
+    comidaCerrarBtn.style.background = "#c99700";
   }
 }
 
 petSelect.addEventListener('change', actualizarEstiloMascota);
+document.addEventListener('DOMContentLoaded', actualizarEstiloMascota);
 
-document.addEventListener('DOMContentLoaded', () => {
-  actualizarEstiloMascota();
-});
+function controlarComida() {
+  Swal.fire({
+    title: 'Abriendo dispensador...',
+    html: 'Espere mientras se dispensa la comida.<br><br><button id="btnParar" class="btn btn-danger mt-3">🚨 Parar</button>',
+    icon: 'info',
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
 
-function enviarComandoAgua(accion) {
-  const url = accion === "abrir" 
-    ? 'http://10.40.0.8:5000/desactivar' 
-    : 'http://10.40.0.8:5000/activar';
+      // Botón de emergencia
+      const btnParar = Swal.getHtmlContainer().querySelector('#btnParar');
+      btnParar.addEventListener('click', () => {
+        fetch(`${API_BASE}/cerrar`, {
+          method: 'POST'
+        })
+          .then(() => {
+            Swal.fire('¡Detenido!', 'El dispensador fue cerrado correctamente.', 'success');
+          })
+          .catch(() => {
+            Swal.fire('Error', 'No se pudo detener el dispensador.', 'error');
+          });
+      });
 
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tipo: 'agua', accion })
-  })
-    .then(res => res.json())
-    .then(data => alert(data.mensaje))
-    .catch(err => console.error('Error:', err));
+      // Apertura normal
+      fetch(`${API_BASE}/abrir`, {
+        method: 'POST'
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Apertura exitosa:', data);
+          // Cierra el modal automáticamente después de un tiempo (opcional)
+          setTimeout(() => {
+            Swal.close();
+          }, 20000); // 20 segundos
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire('Error', 'No se pudo abrir el dispensador.', 'error');
+        });
+    }
+  });
 }
+
+function cerrarComida() {
+  Swal.fire({
+    title: 'Cerrando dispensador...',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+
+      fetch(`${API_BASE}/cerrar`, {
+        method: 'POST'
+      })
+        .then(res => res.json())
+        .then(data => {
+          Swal.fire('Éxito', 'Dispensador cerrado correctamente.', 'success');
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire('Error', 'No se pudo cerrar el dispensador.', 'error');
+        });
+    }
+  });
+}
+
+comidaAbrirBtn.addEventListener('click', controlarComida);
+comidaCerrarBtn.addEventListener('click', cerrarComida);
