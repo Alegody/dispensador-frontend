@@ -1,0 +1,21 @@
+{
+  "name": "Petflow",
+  "short_name": "Petflow",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "description": "A web application to control a pet food dispenser.",
+  "icons": [
+    {
+      "src": "petflow-logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "petflow-logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
