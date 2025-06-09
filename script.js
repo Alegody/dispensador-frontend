@@ -4,7 +4,7 @@ const comidaAbrirBtn = document.getElementById('comidaAbrir');
 const comidaCerrarBtn = document.getElementById('comidaCerrar');
 
 // Endpoint base
-const API_BASE = 'https://79d0-138-186-61-62.ngrok-free.app';
+const API_BASE = 'https://136b-138-186-61-62.ngrok-free.app';
 
 function actualizarEstiloMascota() {
   const tipo = petSelect.value;
