@@ -1,0 +1,143 @@
+version: '3.9'
+services:
+  coordinator:
+    image: citusdata/citus:11.2
+    container_name: coordinator
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=mydatabase
+      - PGPASSWORD=mysecretpassword
+    networks:
+      - petflow
+    depends_on:
+      - worker1
+      - worker2
+    restart: always
+    command: >
+      bash -c "docker-entrypoint.sh postgres &
+      sleep 10 &&
+      psql -U postgres -d mydatabase -c 'CREATE EXTENSION IF NOT EXISTS citus;' &&
+      psql -U postgres -d mydatabase -c 'SELECT * FROM pg_extension;' &&
+      psql -U postgres -d mydatabase -c 'SELECT * FROM pg_dist_node;' &&
+      psql -U postgres -d mydatabase -c \"SELECT master_add_node('worker1', 5432);\" &&
+      psql -U postgres -d mydatabase -c \"SELECT master_add_node('worker2', 5432);\" &&
+      wait"
+
+  worker1:
+    image: citusdata/citus:11.2
+    container_name: worker1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=mydatabase
+    ports:
+      - "5433:5432"
+    networks:
+      - petflow
+    restart: always
+
+  worker2:
+    image: citusdata/citus:11.2
+    container_name: worker2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=mydatabase
+    ports:
+      - "5434:5432"
+    networks:
+      - petflow
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+    networks:
+      - petflow  
+    ports:
+      - "8080:80"
+    restart: always
+
+  front:
+    build: ./front
+    environment:
+      - DATABASE_HOST=coordinator
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=mysecretpassword
+      - DATABASE_NAME=mydatabase
+    networks:
+      - petflow
+    depends_on:
+      - coordinator
+    restart: always
+    deploy:
+      replicas: 2
+    expose:
+      - "80"
+
+  api:
+    build: ./api
+    environment:
+      - DATABASE_HOST=coordinator
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=mysecretpassword
+      - DATABASE_NAME=mydatabase
+    networks:
+      - petflow
+    depends_on:
+      - coordinator
+    restart: always
+    deploy:
+      replicas: 2
+    expose:
+      - "3000"
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    networks:
+      - petflow
+    depends_on:
+      - front
+      - api
+    restart: always
+
+  backup:
+    build: ./backup
+    container_name: backup
+    volumes:
+      - db_backups:/backup
+    environment:
+      - DATABASE_HOST=coordinator
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=mysecretpassword
+      - DATABASE_NAME=mydatabase
+      - AWS_ACCESS_KEY_ID=XXXXXXX
+      - AWS_SECRET_ACCESS_KEY=XXXXX
+      - AWS_S3_BUCKET=XXXXX
+      - AWS_REGION=us-east-1
+    networks:
+      - petflow
+    depends_on:
+      - coordinator
+    restart: "no"
+
+networks:
+  petflow:
+    driver: bridge
+
+volumes:
+  db_backups:
